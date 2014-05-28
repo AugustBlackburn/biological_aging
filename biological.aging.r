@@ -86,9 +86,32 @@ PC_scores3 <- PC_scores2[,2:ncol(PC_scores2)]
 return(PC_scores3)
 }
 
+###Function to calculate biological age using Bayesian Model Averaging
+calculate.ba.measures.BMA<-function(Table){
+library(BMA)
+big.ba.measures<-data.frame(matrix(ncol=4,nrow=length(Table[,1])))
+for (i in 1:3){
+	big.ba.measures[,i]<-Table[,i]
+}
+colnames(big.ba.measures)<-c(colnames(Table[,1:3]),"BMA")
+p <- NCOL(Table)
+ms1 <- Table[,4:p]
+age <- Table[,3]
+msbicreg <- bicreg(ms1,age)
+summ <- summary(msbicreg)
+ones <- rep(1,times=NROW(ms1))
+ms2 <- as.matrix(cbind(ones,ms1))
+beta_v <- as.numeric(summ[1:(p-2),2])
+predms <- ms2%*%beta_v
+BA_BMA <- age-predms
+big.ba.measures[,4]<-BA_BMA
+return(big.ba.measures)
+}
+
 ###Example
 ##BioAgeData <- read.csv(file="phensForScreen.csv",head=T)
 ##Sex.corrected<-regress.sex(BioAgeData)
 ##PCA.of.data<-calculate.pca.using.svd
 ##ba.measures.measured<-calculate.ba.measures(PCA.of.data)
+##ba.via.bma<-calculate.ba.measures.BMA(PCA.of.data)
 
