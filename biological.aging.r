@@ -272,4 +272,5 @@ NEW3<-merge(NEW2,KD,by=names[1])
 NEW4<-merge(NEW3,CFI,by=names[1])
 NEW5<-merge(NEW4,BMA,by=names[1])
 write.table(NEW5, file="BA_table_PC_scores_met_syn1.csv", sep=",",row.names=FALSE)
+return(NEW5)
 }
